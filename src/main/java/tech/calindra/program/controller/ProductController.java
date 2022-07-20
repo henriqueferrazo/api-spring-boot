@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tech.calindra.program.dto.ProductDto;
@@ -34,6 +35,27 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public Product findById(@PathVariable("id") Long id){
         return productService.findAllById(id).get();
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Product> search(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam(
+                    value = "page",
+                    required = false,
+                    defaultValue = "10") int page,
+            @RequestParam(
+                    value="size",
+                    required = false,
+                    defaultValue = "10") int size){
+        return productService.search(searchTerm, page, size);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Product> getAll() {
+        return productService.findAll();
     }
 
 
